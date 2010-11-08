@@ -111,7 +111,7 @@
  * @license     http://sldn.softlayer.com/wiki/index.php/License
  * @see         SoftLayer_SoapClient
  */
-class SoftLayer_SoapClient_AsynchronousAction
+class SoftLayer_AsynchronousAction
 {
     /**
      * The SoftLayer SOAP client making an asynchronous call

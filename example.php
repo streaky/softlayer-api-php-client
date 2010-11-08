@@ -36,7 +36,7 @@
  * SoapClient.class.php with XmlrpcClient.class.php and SoftLayer_SoapClient
  * with SoftLayer_XmlrpcClient.
  */
-require_once dirname(__FILE__) . '/SoftLayer/SoapClient.class.php';
+require_once __DIR__.'/SoftLayer/SoapClient.class.php';
 
 /**
  * It's possible to define your SoftLayer API username and key diredtly in the
@@ -57,7 +57,7 @@ $apiKey = 'set me too';
  * username:    Your SoftLayer API username.
  * API key:     Your SoftLayer API key,
  */
-$client = SoftLayer_SoapClient::getClient('SoftLayer_Account', null, $apiUsername, $apiKey);
+$client = SoftLayer::getClient('Account', null, $apiUsername, $apiKey);
 
 /**
  * Once your client object is created you can call API methods for that service
@@ -84,7 +84,7 @@ try {
  */
 
 // Declare an API client to connect to the SoftLayer_Ticket API service.
-$client = SoftLayer_SoapClient::getClient('SoftLayer_Ticket', 123456, $apiUsername, $apiKey);
+$client = SoftLayer::getClient('Ticket', 123456, $apiUsername, $apiKey);
 
 // Assign an object mask to our API client:
 $objectMask = new SoftLayer_ObjectMask();

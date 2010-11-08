@@ -27,15 +27,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-require_once dirname(__FILE__) . '/Common/ObjectMask.class.php';
-require_once dirname(__FILE__) . '/SoapClient/AsynchronousAction.class.php';
+require_once __DIR__.'/Common/ObjectMask.class.php';
+require_once __DIR__.'/SoapClient/AsynchronousAction.class.php';
 
 if (!extension_loaded('soap')) {
     throw new Exception('Please load the PHP SOAP extension.');
-}
-
-if (version_compare(PHP_VERSION, '5.2.3', '<')) {
-    throw new Exception('The SoftLayer API SOAP client class requires at least PHP version 5.2.3.');
 }
 
 /**
@@ -61,8 +57,7 @@ if (version_compare(PHP_VERSION, '5.2.3', '<')) {
  * @link        http://sldn.softlayer.com/wiki/index.php/The_SoftLayer_API The SoftLayer API
  * @see         SoftLayer_SoapClient_AsynchronousAction
  */
-class Softlayer_SoapClient extends SoapClient
-{
+class Softlayer extends SoapClient {
     /**
      * Your SoftLayer API username. You may overide this value when calling
      * getClient().
@@ -178,8 +173,7 @@ class Softlayer_SoapClient extends SoapClient
      *
      * @return object
      */
-    public function __call($functionName, $arguments = null)
-    {
+    public function __call($functionName, $arguments = null) {
         // Determine if we shoud be making an asynchronous call. If so strip
         // "Async" from the end of the method name.
         if ($this->_asyncResult == null) {
@@ -225,9 +219,8 @@ class Softlayer_SoapClient extends SoapClient
      * @param string $endpointUrl The API endpoint base URL you wish to connect to. Set this to SoftLayer_SoapClient::API_PRIVATE_ENDPOINT to connect via SoftLayer's private network.
      * @return SoftLayer_SoapClient
      */
-    public static function getClient($serviceName, $id = null, $username = null, $apiKey = null, $endpointUrl = null)
-    {
-        $serviceName = trim($serviceName);
+    public static function getClient($serviceName, $id = null, $username = null, $apiKey = null, $endpointUrl = null) {
+        $serviceName = "SoftLayer_".trim($serviceName);
 
         if ($serviceName == null) {
             throw new Exception('Please provide a SoftLayer API service name.');
@@ -247,13 +240,13 @@ class Softlayer_SoapClient extends SoapClient
         } elseif (self::API_BASE_URL != null) {
             $endpointUrl = self::API_BASE_URL;
         } else {
-            $endpointUrl = SoftLayer_SoapClient::API_PUBLIC_ENDPOINT;
+            $endpointUrl = SoftLayer::API_PUBLIC_ENDPOINT;
         }
 
         if (is_null(self::SOAP_TIMEOUT)) {
-            $soapClient = new SoftLayer_SoapClient($endpointUrl . $serviceName . '?wsdl');
+            $soapClient = new SoftLayer($endpointUrl . $serviceName . '?wsdl');
         } else {
-            $soapClient = new SoftLayer_SoapClient($endpointUrl . $serviceName . '?wsdl', array('connection_timeout' => self::SOAP_TIMEOUT));
+            $soapClient = new SoftLayer($endpointUrl . $serviceName . '?wsdl', array('connection_timeout' => self::SOAP_TIMEOUT));
         }
 
         $soapClient->_serviceName = $serviceName;
@@ -352,8 +345,7 @@ class Softlayer_SoapClient extends SoapClient
      * @param int $id The ID number of the SoftLayer API object you wish to instantiate.
      * @return SoftLayer_SoapClient
      */
-    public function setInitParameter($id)
-    {
+    public function setInitParameter($id) {
         $id = trim($id);
 
         if (!is_null($id)) {
@@ -452,7 +444,7 @@ class Softlayer_SoapClient extends SoapClient
 
             return $result;
         } else {
-            $this->_asyncAction = new SoftLayer_SoapClient_AsynchronousAction($this, $this->asyncFunctionName, $request, $location, $action);
+            $this->_asyncAction = new SoftLayer_AsynchronousAction($this, $this->asyncFunctionName, $request, $location, $action);
             return '';
         }
     }
